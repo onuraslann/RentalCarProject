@@ -15,5 +15,7 @@ namespace Business.Constants
         public static string CarAdded = "Araba eklendi";
         public static string CarDeleted = "Araba silindi";
         public static string RentalValidator = "CustomerId boş geçilemez";
+        public static string CheckIfBrandIdCount = "Bir markadan en fazla 9 araç olabilir";
+        public static string CheckIfColorCount = "Bir renkten en fazla 9 araç olabilir";
     }
 }

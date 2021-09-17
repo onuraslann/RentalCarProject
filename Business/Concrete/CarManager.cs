@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Validation;
 using Core.Utilities.Result;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -18,7 +20,7 @@ namespace Business.Concrete
         {
             _carDal = carDal;
         }
-
+        [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
             _carDal.Add(car);
@@ -44,6 +46,24 @@ namespace Business.Concrete
         public IDataResult<List<CarDtoDetails>> GetByDto()
         {
             return new SuccessDataResult<List<CarDtoDetails>>(_carDal.GetByDto());
+        }
+        private IResult CheckIfBrandIdCount(int brandId)
+        {
+            var result = _carDal.GetAll(x => x.BrandId == brandId).Count;
+            if (result > 10)
+            {
+                return new ErrorResult(Messages.CheckIfBrandIdCount);
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfColorCount(int colorId)
+        {
+            var result = _carDal.GetAll(x => x.BrandId == colorId).Count;
+            if (result > 10)
+            {
+                return new ErrorResult(Messages.CheckIfColorCount);
+            }
+            return new SuccessResult();
         }
     }
 }
