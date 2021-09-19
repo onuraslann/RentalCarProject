@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Core.Entities.Concrete;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Business.Constants
@@ -17,5 +19,13 @@ namespace Business.Constants
         public static string RentalValidator = "CustomerId boş geçilemez";
         public static string CheckIfBrandIdCount = "Bir markadan en fazla 9 araç olabilir";
         public static string CheckIfColorCount = "Bir renkten en fazla 9 araç olabilir";
+        public static string AuthorizationDenied = "Yetkiniz yok";
+        public static string UsersAdded = "Kullanıcı oluşturuldu";
+
+        public static string UserNotFound = "Kullanıcı bulunamadı";
+        public static string PasswordError = "Parola hatası";
+        public static string SuccessLogin = "Giriş başarılı";
+        public static string UserAlreadyExists = "Başka bir kullanıcı ismi giriniz";
+        public static string AccessTokenAdded = "Token oluşturuldu";
     }
 }
