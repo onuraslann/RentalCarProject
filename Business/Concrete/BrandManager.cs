@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects;
 using Business.Constants;
+using Core.Aspects.Caching;
 using Core.Utilities.Business;
 using Core.Utilities.Result;
 using DataAccess.Abstract;
@@ -19,7 +21,8 @@ namespace Business.Concrete
         {
             _brandDal = brandDal;
         }
-
+        [SecuredOperation("admin")]
+        [CacheRemoveAspect("IBrandService.Get")]
         public IResult Add(Brand brand)
         {
             IResult result = BusinessRules.Run(CheckIfNameExist(brand.BrandName));
@@ -37,10 +40,19 @@ namespace Business.Concrete
             return new SuccessResult(Messages.BrandAdded);
         }
 
+        [CacheAspect]
         public IDataResult<List<Brand>> GetAll()
         {
             return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(), Messages.BrandList);
         }
+
+        [CacheRemoveAspect("IBrandService.Get")]
+        public IResult Update(Brand brand)
+        {
+            _brandDal.Update(brand);
+            return new SuccessResult();
+        }
+
         private IResult CheckIfNameExist(string brandName)
         {
             var result = _brandDal.GetAll(x => x.BrandName == brandName).Any();
