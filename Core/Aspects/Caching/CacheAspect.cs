@@ -29,10 +29,10 @@ namespace Core.Aspects.Caching
             if (_cacheManager.IsAdd(key))
             {
                 invocation.ReturnValue = _cacheManager.Get(key);
-                return;
+                    return;
             }
             invocation.Proceed();
             _cacheManager.Add(key, invocation.ReturnValue, _duration);
-        }
+            }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Aspects.Caching;
 using Core.Utilities.Result;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -18,7 +19,7 @@ namespace Business.Concrete
         {
             _colorDal = colorDal;
         }
-
+        [CacheRemoveAspect("IColorService.Get")]
         public IResult Add(Color color)
         {
             _colorDal.Add(color);
@@ -31,6 +32,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ColorDeleted);
         }
 
+        [CacheAspect]
         public IDataResult<List<Color>> GetAll()
         {
             return new SuccessDataResult<List<Color>>(_colorDal.GetAll());
