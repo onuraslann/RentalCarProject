@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Core.Aspects.Caching;
+using Core.Aspects.Performance;
 using Core.Utilities.Result;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -26,6 +27,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ColorAdded);
         }
 
+      
         public IResult Delete(Color color)
         {
             _colorDal.Delete(color);
@@ -33,6 +35,7 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
+        [PerformanceAspect(5)]
         public IDataResult<List<Color>> GetAll()
         {
             return new SuccessDataResult<List<Color>>(_colorDal.GetAll());

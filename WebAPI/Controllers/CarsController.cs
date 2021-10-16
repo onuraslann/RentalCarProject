@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpPost("add")]
-        public IActionResult Add(Car  car)
+        public IActionResult Add(Car car)
         {
             var result = _carService.Add(car);
             if (result.Success)
@@ -59,7 +59,16 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+        [HttpPost("transactionsadd")]
+        public IActionResult TransactionTestAdd(Car car)
+        {
+            var result = _carService.AddTransactionTest(car);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
 
-
+        }
     }
 }

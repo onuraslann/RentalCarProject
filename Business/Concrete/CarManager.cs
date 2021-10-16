@@ -3,6 +3,8 @@ using Business.BusinessAspects;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Caching;
+using Core.Aspects.Performance;
+using Core.Aspects.Transaction;
 using Core.Aspects.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Result;
@@ -37,6 +39,19 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarAdded);
         }
 
+        [TransactionScopeAspect]
+        public IResult AddTransactionTest(Car car)
+        {
+            Add(car);
+            if (car.DailyPrice < 80)
+            {
+                throw new Exception("");
+            }
+           
+            Add(car);
+            return null;
+        }
+
         public IResult Delete(Car car)
         {
             _carDal.Delete(car);
@@ -44,6 +59,7 @@ namespace Business.Concrete
         }
 
          [CacheAspect]
+         [PerformanceAspect(5)]
         public IDataResult<List<Car>> GetAll()
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll());
