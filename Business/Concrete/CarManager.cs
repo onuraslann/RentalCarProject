@@ -14,6 +14,7 @@ using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Business.Concrete
 {
@@ -25,7 +26,7 @@ namespace Business.Concrete
         {
             _carDal = carDal;
         }
-        [SecuredOperation("admin,editör")]
+        //[SecuredOperation("admin,editör")]
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
@@ -38,18 +39,12 @@ namespace Business.Concrete
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
         }
-
         [TransactionScopeAspect]
-        public IResult AddTransactionTest(Car car)
+        public IResult AddTransactionOperation(Car car)
         {
-            Add(car);
-            if (car.DailyPrice < 80)
-            {
-                throw new Exception("");
-            }
-           
-            Add(car);
-            return null;
+            _carDal.Update(car);
+            _carDal.Add(car);
+            return new SuccessResult(Messages.TransactionsCars);
         }
 
         public IResult Delete(Car car)
@@ -59,9 +54,10 @@ namespace Business.Concrete
         }
 
          [CacheAspect]
-         [PerformanceAspect(5)]
+         [PerformanceAspect(interval:5)]
         public IDataResult<List<Car>> GetAll()
         {
+            Thread.Sleep(6000);
             return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
 
@@ -74,6 +70,14 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<CarDtoDetails>>(_carDal.GetByDto());
         }
+
+        public IResult Update(Car car)
+        {
+            _carDal.Update(car);
+
+            return new SuccessResult();
+        }
+
         private IResult CheckIfBrandIdCount(int brandId)
         {
             var result = _carDal.GetAll(x => x.BrandId == brandId).Count;
@@ -81,7 +85,7 @@ namespace Business.Concrete
             {
                 return new ErrorResult(Messages.CheckIfBrandIdCount);
             }
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarUpdated);
         }
         private IResult CheckIfColorCount(int colorId)
         {
